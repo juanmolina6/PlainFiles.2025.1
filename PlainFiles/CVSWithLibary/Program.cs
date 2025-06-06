@@ -69,6 +69,7 @@ do
     Console.WriteLine("2. Add person");
     Console.WriteLine("3. Show report by city");
     Console.WriteLine("4. Save changes");
+    Console.WriteLine("5. Delete person");
     Console.WriteLine("0. Exit");
     Console.Write("Choose an option: ");
     opc = Console.ReadLine() ?? "0";
@@ -93,6 +94,10 @@ do
         case "4":
             SaveChanges();
             Console.WriteLine("Changes saved.\n");
+            break;
+
+        case "5":
+            DeletePerson(people);
             break;
 
         case "0":
@@ -206,4 +211,36 @@ void ShowReportByCity(List<Person> peopleList)
 
     Console.WriteLine("\t\t\t\t=======");
     Console.WriteLine($"Total General:\t\t\t{totalGeneral,10:C2}\n");
+}
+void DeletePerson(List<Person> peopleList)
+{
+    Console.Write("Enter the ID of the person to delete: ");
+    if (!int.TryParse(Console.ReadLine(), out int id))
+    {
+        Console.WriteLine("Invalid ID.\n");
+        return;
+    }
+
+    var person = peopleList.FirstOrDefault(p => p.Id == id);
+    if (person == null)
+    {
+        Console.WriteLine("Person not found.\n");
+        return;
+    }
+
+    Console.WriteLine("\nPerson found:");
+    Console.WriteLine(person);
+
+    Console.Write("Are you sure you want to delete this person? (Y/N): ");
+    string confirm = Console.ReadLine()?.Trim().ToUpper() ?? "N";
+
+    if (confirm == "Y")
+    {
+        peopleList.Remove(person);
+        Console.WriteLine("Person deleted successfully.\n");
+    }
+    else
+    {
+        Console.WriteLine("Deletion canceled.\n");
+    }
 }
