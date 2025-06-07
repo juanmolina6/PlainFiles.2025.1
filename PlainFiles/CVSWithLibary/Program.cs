@@ -69,7 +69,8 @@ do
     Console.WriteLine("2. Add person");
     Console.WriteLine("3. Show report by city");
     Console.WriteLine("4. Save changes");
-    Console.WriteLine("5. Delete person");
+    Console.WriteLine("5. Edit person");
+    Console.WriteLine("6. Delete person");
     Console.WriteLine("0. Exit");
     Console.Write("Choose an option: ");
     opc = Console.ReadLine() ?? "0";
@@ -97,6 +98,10 @@ do
             break;
 
         case "5":
+            EditPerson(people);
+            break;
+
+        case "6":
             DeletePerson(people);
             break;
 
@@ -244,3 +249,76 @@ void DeletePerson(List<Person> peopleList)
         Console.WriteLine("Deletion canceled.\n");
     }
 }
+
+    void EditPerson(List<Person> peopleList)
+    {
+        Console.Write("Enter the ID of the person to edit: ");
+        if (!int.TryParse(Console.ReadLine(), out int id))
+        {
+            Console.WriteLine("Invalid ID.\n");
+            return;
+        }
+
+        var person = peopleList.FirstOrDefault(p => p.Id == id);
+        if (person == null)
+        {
+            Console.WriteLine("Person not found.\n");
+            return;
+        }
+
+        Console.WriteLine("\nEditing person:");
+        Console.WriteLine(person);
+        Console.WriteLine("Press ENTER to keep the current value.\n");
+
+        Console.Write($"First name ({person.FirstName}): ");
+        string firstName = Console.ReadLine() ?? "";
+        if (!string.IsNullOrWhiteSpace(firstName))
+        {
+            person.FirstName = firstName;
+        }
+
+        Console.Write($"Last name ({person.LastName}): ");
+        string lastName = Console.ReadLine() ?? "";
+        if (!string.IsNullOrWhiteSpace(lastName))
+        {
+            person.LastName = lastName;
+        }
+
+        Console.Write($"Phone ({person.Phone}): ");
+        string phone = Console.ReadLine() ?? "";
+        if (!string.IsNullOrWhiteSpace(phone))
+        {
+            if (IsValidPhone(phone))
+            {
+                person.Phone = phone;
+            }
+            else
+            {
+                Console.WriteLine("Invalid phone number. Keeping previous value.");
+            }
+        }
+
+        Console.Write($"City ({person.City}): ");
+        string city = Console.ReadLine() ?? "";
+        if (!string.IsNullOrWhiteSpace(city))
+        {
+            person.City = city;
+        }
+
+        Console.Write($"Balance ({person.Balance}): ");
+        string balanceInput = Console.ReadLine() ?? "";
+        if (!string.IsNullOrWhiteSpace(balanceInput))
+        {
+            if (decimal.TryParse(balanceInput, out decimal balance) && balance >= 0)
+            {
+                person.Balance = balance;
+            }
+            else
+            {
+                Console.WriteLine("Invalid balance. Keeping previous value.");
+            }
+        }
+
+        Console.WriteLine("Person updated successfully.\n");
+    }
+
